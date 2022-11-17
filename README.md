@@ -1,2 +1,2 @@
-# breast_cancer_malignancy_prediction
+# Breast Cancer malignancy prediction
 practical session on Machine Learning Classifiers
