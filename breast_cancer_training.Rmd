@@ -1,0 +1,178 @@
+---
+title: "Prediction of malignancy in breast cancer using machine learning approaches"
+author: "Kevin Atsou"
+date: "10/27/2021"
+output: 
+    html_document:
+      toc: yes
+      toc_float: yes
+    # pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+`%>%` <- magrittr::`%>%`
+```
+
+## Introduction
+The objective of this small project is to train a model to predict whether a breast lesion is malignant or benign, from data obtained by biopsies.
+
+The data comes from the University of Wisconsin. It consists of features from digitized images of fine needle aspirates of a breast mass.
+
+![](http://benzekry.perso.math.cnrs.fr/DONNEES/fine_needle_aspirate.gif)
+
+The features describe characteristics of the cell nuclei present in the image. Namely, ten real-valued features are computed for each cell nucleus in the digital image:
+
+* radius (mean of distances from center to points on the perimeter)
+* texture (standard deviation of gray-scale values)
+* perimeter
+* area
+* smoothness (local variation in radius lengths)
+* compactness (perimeter^2 / area - 1.0)
+* concavity (severity of concave portions of the contour)
+* concave points (number of concave portions of the contour)
+* symmetry
+* fractal dimension
+
+![(picture from Chain, K., Legesse, T., Heath, J.E. and Staats, P.N. (2019), Digital image‐assisted quantitative nuclear analysis improves diagnostic accuracy of thyroid fine‐needle aspiration cytology. Cancer Cytopathology, 127: 501-513. doi:10.1002/cncy.22120)](http://benzekry.perso.math.cnrs.fr/DONNEES/cytology.jpg)
+
+The mean value, standard error and and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features per instance (patient). The first and two columns correspond to the patient IDs and the diagnosis outcome (M=malignant, B=benign).
+
+You can find more information and other data sets at https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29
+Credit: a lot of tis tutorial has been adapted from https://towardsdatascience.com/breast-cancer-cell-type-classifier-ace4e82f9a79
+
+## Load the data
+1. Use the following code to load the data. It Uses the function `read_csv` from the package `readr` ^['readr' package is part of the 'tidyverse' packages suite], for loading the data set:
+the data set file can be downloaded at: https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data
+
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+features_names <- c(
+  'radius',
+  'texture',
+  'perimeter',
+  'area',
+  'smoothness',
+  'compactness',
+  'concavity',
+  'concave_points',
+  'symmetry',
+  'fractal_dimension'
+)
+features_names_SE = paste0(features_names,'_SE')
+features_names_W = paste0(features_names,'W')
+column_names = c('ID','diagnosis', features_names, features_names_SE, features_names_W)
+
+df <- readr::read_csv('data/wdbc.data', col_names = column_names) 
+```
+
+2. Use the function `head` to display the first 5 lines of the data
+```{r message=FALSE, warning=FALSE}
+
+```
+The columns with the extension `_SE` represent the standard Errors of the features and the columns with the extension `_W` represent the Worst values of the features.
+
+How many patients are present in the data set? 
+```{r message=FALSE, warning=FALSE}
+
+```
+3. Drop the 'ID' column, as well as the columns with standard Errors and worst values of the parameters.
+```{r message=FALSE, warning=FALSE}
+```
+
+4. Check if there are any missing values. 
+```{r message=FALSE, warning=FALSE}
+
+```
+
+5. Check the types of every column (use the `class` function)
+```{r message=FALSE, warning=FALSE}
+```
+6. What is the type of the entries of `diagnosis` column?
+
+## Data Exploration
+1. How many patients have a benign lesion and how many have a malignant tumor?What are the corresponding percentages?
+```{r message=FALSE, warning=FALSE}
+
+```
+2. Use `ggplot` to visualize these numbers
+```{r message=FALSE, warning=FALSE}
+
+```
+
+3. Using boxplots compare radius, area and concavity between benign and malignant, 
+discuss the results
+
+```{r meassage=FALSE, warning=FALSE}
+
+```
+```{r meassage=FALSE, warning=FALSE}
+
+```
+```{r meassage=FALSE, warning=FALSE}
+
+```
+3.1 In order to grasp the significance of the observed differences, use `ggpubr`
+to compare means and show t-test p-values
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+4. Use a loop over the `features_names` and plot the histograms of each feature with one histogram for the benign lesions and one histogram for the malignant tumors (both histograms on same figure, colors red and green). Use transparency (parameter alpha=0.5) when plotting histogram
+
+```{r message=FALSE, warning=FALSE}
+
+```
+```{r message=FALSE, warning=FALSE}
+
+```
+
+5. Add the density estimates to the histogram plots and discuss the results
+
+6. Use the `GGally` package to plot benign and malignant in different colrs, plot all 2x2 plot of features against each other
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+7. Do you observe correlations? Do they make sense?
+
+8. Use the `cor` function to compute the correlation matrix of the data and use the `corrplot` from the `corrplot` package to visualize the matrix. 
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+9. Comment the result of the correlation matrix visualization. Which variables can be removed from the analysis according to the correlation matrix?
+
+## Preparation of the data
+1. Define `X` as the data frame containing only the features and `y` containing only the outcome (`diagnosis`) and split the data set into a training (`X_train` and `y_train`) and a test set (`X_test` and `y_test`). Put 30% of the data in the test set. 
+```{r message=FALSE, warning=FALSE}
+
+```
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+2. Use the caret package to preprocess the data variables
+```{r message=FALSE, warning=FALSE}
+
+```
+
+## Fit a model
+### Logistic regression
+1. Fit a logistic regression model to the training data
+2. Compute the predictions on the test set
+### Random Forest
+2. Fit a random forest classifier to the training data 
+3. Compute the predictions on the test set
+
+### Model comparison
+1. Compute the accuracy of the predictions for both the logistic regression model
+and the random Forest model and plot the ROC curves
+2. Compare the two models and discuss
+3. Retrieve the more important feature from the random forest
+
+## Cross-validation (as a homework)
+To evaluate the performances of the model not only on one test-set but on multiple ones, we can use cross-validation. Let's use 10 folds. This means that the data set will be cut ten times into a learning and a test set and each time we will train a random forest classifier.
