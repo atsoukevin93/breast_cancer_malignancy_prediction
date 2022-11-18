@@ -145,6 +145,10 @@ to compare means and show t-test p-values
 
 9. Comment the result of the correlation matrix visualization. Which variables can be removed from the analysis according to the correlation matrix?
 
+10. Install the Package `BiocManager` install the bioconductor `M3C` package by running `BiocManager::install("M3C")`
+
+11. Use UMAP (Uniform Manifold Approximation and Projection) to reduce the dimension and visualize the output and comment the results
+
 ## Preparation of the data
 1. Define `X` as the data frame containing only the features and `y` containing only the outcome (`diagnosis`) and split the data set into a training (`X_train` and `y_train`) and a test set (`X_test` and `y_test`). Put 30% of the data in the test set. 
 ```{r message=FALSE, warning=FALSE}
