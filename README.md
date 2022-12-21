@@ -1,2 +1,2 @@
 # Breast Cancer malignancy prediction
-practical session on Machine Learning Classifiers
+practical session of my lecture on Machine Learning Classifiers
